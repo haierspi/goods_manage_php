@@ -1,0 +1,80 @@
+<html>
+
+<head>
+  <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+  <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/jquery/dist/jquery.min.js"></script>
+  <script type="text/javascript">
+
+
+jQuery(function() {
+  function todo (){
+      var url = 'https://www.starfission.top/order/GoodsOldOrder'
+    // 请求的参数对象
+    var paramsObj = {
+      goods_id: 8,
+      user_id: 10000341,
+      domain: window.location.protocol + '//'+ window.location.host
+    }
+    // 调用 axios.get() 发起 GET 请求
+    axios.get(
+        
+        url, {
+          params: paramsObj,
+          withCredentials: true,
+          timeout: 10000 * 1000000,
+        }
+      )
+      .then(function (res) {
+        // res.data 是服务器返回的数据
+        var result = res.data
+
+        console.log(result)
+        jQuery('p').append(url+':<br /><br /><br />'+JSON.stringify(result)+'<br /><br /><br />')
+      })
+    }
+
+    function todo2 (){
+      var url = 'https://api.modernlandmark.com/'
+    // 请求的参数对象
+    var paramsObj = {
+      goods_id: 8,
+      user_id: 10000341,
+      domain: window.location.protocol + '//'+ window.location.host
+    }
+    // 调用 axios.get() 发起 GET 请求
+    axios.get(
+        
+        url, {
+          params: paramsObj,
+          withCredentials: true,
+          timeout: 10000 * 1000000,
+        }
+      )
+      .then(function (res) {
+        // res.data 是服务器返回的数据
+        var result = res.data
+
+        console.log(result)
+
+        jQuery('p').append(url+':<br /><br />'+JSON.stringify(result)+'<br /><br /><br />')
+        
+
+      })
+    }
+
+    
+
+    todo();
+    todo2();
+})
+
+
+
+  </script>
+</head>
+
+<body>
+  <p>API res:<br /><br /><br /></p>
+</body>
+
+</html>

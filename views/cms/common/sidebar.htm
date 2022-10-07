@@ -1,0 +1,31 @@
+<div class="sidebar" >
+    <a class="btn-fold-menu " href="javascript:;" title="收起" data-event="toggle_sidebar">收起</a>
+    <div class="sidebar-nav " >
+        <h2>$MODULEVAR[text]</h2>
+        <hr class="line-mod">
+
+        <ul class=" side-menu" >
+           	<!--{loop $SideMenu $key $value}-->
+            <li  class="collapsed" >
+                <a href="/{$MODULE}/{$key}" >$value</a>
+            </li>
+            <!--{/loop}--> 
+        </ul>
+    </div>          
+</div>
+<style>
+.showSide {
+    line-height: 100;
+    position: absolute;
+    top: 21px;
+    right: -17px;
+    overflow: hidden;
+    width: 16px;
+    height: 36px;
+    border: 1px solid #c7e0ef;
+    border-left-width: 0;
+    border-radius:0 3px 3px 0;
+    background: #f7fdfd url(/static/images/top-menu.png) -88px -40px no-repeat;
+    z-index: 100;
+}
+</style>

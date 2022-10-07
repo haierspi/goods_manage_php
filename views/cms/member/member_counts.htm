@@ -1,0 +1,189 @@
+<!--{subtemplate cms/common/header}-->
+<!--{subtemplate common/navbar}-->
+<div id="page-wrapper" class="">
+        <!-- 左侧导航 -->
+        <!--{subtemplate cms/common/sidebar}-->
+        <div class="main">
+            <!-- 页头 -->
+            <div class="col-lg-12">
+                <div class="page-header">
+                    <h2>用户积分记录</h2> 
+                    <a href="javascript:history.go(-1)" class="btn btn-primary btn-sm" style="margin-right: 20px;float: right;margin-top:20px;" >返回</a>
+                </div>
+                <div class="main-area ">
+                    <div class="tab-content">
+                            <table cellpadding="0" cellspacing="0" border="0" width="100%" class="table tablespacer">
+                                    <thead>	
+                                        <tr class="managetablehead">
+                                            <th class="first" colspan=4>用户信息</th>
+                                        </tr>
+                                    </thead>
+                                    <tr>
+                                        <td class="name" width="10%"><p>用户UID</p></td><td width="40%">{$memebermessage[uid]}</td>
+                                        <td class="name"  width="10%"><p>用户昵称</p></td><td width="40%">{$memebermessage[nickname]}</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="name"><p>用户头像</p></td><td><img src="{$memebermessage['avatar']}" alt="" width="50px;"></td>
+                                        <td class="name">用户身份</td><td>
+                                            {if $memebermessage['shopmanager']==1}
+                                            店长
+                                            {elesif $memebermessage['boss']==1}
+                                            BOSS
+                                            {else}
+                                            普通买主
+                                            {/if}
+                                        </td>
+                                    </tr>
+                                    <tr>	
+                                        <td class="name">积分</td>
+                                        <td>
+                                            {echo (int)$memebermessage[bonuspoints]}
+                                        </td>
+                                        <td class="name">商票</td>
+                                        <td>
+                                            {$memebermessage[redmoney]} 元
+                                        </td>
+                                    </tr>
+                                   
+                                    <!-- {if $memebermessage['shopmanager']==1 || $memebermessage['boss']==1} -->
+                                     <tr>
+                                        <td class="name"><p>佣金</p></td><td><p>{$memebermessage[commission]} 元</p></td>
+                                        <td class="name">冻结佣金</td><td><p><span style="font-weight: bold;color: red">
+                                            <!-- {if $memebermessage[frozen_commission]} -->
+                                            {$memebermessage[frozen_commission]}
+                                            <!-- {else} -->
+                                            0.00
+                                            <!-- {/if} -->
+                                        </span>元</p></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="name"><p>会长圈佣金</p></td><td><p>{$memebermessage[uniongold]} 元</p></td>
+                                        <td class="name">会长圈冻结佣金</td><td><p><span style="font-weight: bold;color: red">
+                                             <!-- {if $memebermessage[frozen_uniongold]} -->
+                                            {$memebermessage[frozen_uniongold]}
+                                             <!-- {else} -->
+                                             0.00
+                                             <!-- {/if} -->
+                                        </span> 元</p></td>
+                                    </tr>
+                                    <!-- {/if} -->
+                                  
+                                </table>
+
+                                <div class="col-lg-12" style="border-top:#ccc 1px solid;">
+                                    <div class="main-area" style="margin-top:5px;">
+                                        <div class="main-area-operArea ">
+                                            <div class="input-group pull-right">
+                                                <select class="js-example-basic-single" data-var="typevalue" >
+                                                        <option value="{#null#}" {if is_null($typevalue)}selected="selected"{/if}>类型</option>
+                                                        <optgroup label="类型">
+                                                        <!--{loop $type $key $value}-->
+                                                        <option value="{$key}" {if $typevalue == $key}selected="selected"{/if}>$value</option>
+                                                        <!--{/loop}-->
+                                                        </optgroup>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="main-area-cvmList">
+                                            <table class="table">
+                                                <thead>
+                                                    <tr >
+                                                        <th width="10%">ID</th>
+                                                        <th width="10%">积分类型</th>
+                                                        <th width="15%">消费前值</th>
+                                                        <th width="10%">消费值</th>
+                                                        <th width="10%">消费后剩余</th>
+                                                        <th width="10%">变动类型</th>
+                                                        <th width="10%">变动消息</th>
+                                                        <th width="10%">变更时间</th>
+                                                       
+                                                       
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                        
+                                                <!--{if $list}-->
+                                                    <!--{loop $list $i $value}-->
+                                                    <tr>
+                                                        <td>$value['id']</td>
+                                                        <td>{if $value['type'] == 'bonuspoints'}
+                                                            积分
+                                                            {elseif $value['type'] == 'redmoney'}
+                                                            红包
+                                                            {elseif $value['type'] == 'commission'}
+                                                            佣金
+                                                            {elseif $value['type'] == 'frozen_commission'}
+                                                            冻结佣金
+                                                            {elseif $value['type'] == 'frozen_uniongold'}
+                                                            会长圈冻结佣金
+                                                            {elseif $value['type'] == 'uniongold'}
+                                                            会长圈佣金
+                                                            {/if}
+                                                        </td>
+                                                       
+                                                       
+                                                        <td>$value['beforecredits']</td>
+                                                        <td>$value['credits']</td>
+                                                        <td>$value['aftercredits']</td>
+                                                        <td>
+                                                           <!-- {loop $changetype $change $pe} -->
+                                                           <!-- {if $value['changetype'] == $change} -->
+                                                           $pe
+                                                           <!-- {/if} -->
+                                                           <!-- {/loop} -->
+                                                        </td>
+                                                        <td>$value['changemessage']</td>
+                                                        <td >$value['datetime']</td>
+                                                        
+                                                       
+                                                    </tr>
+                                                    <!--{/loop}-->
+                                                <!--{else}-->
+                                                    <tr>
+                                                        <td colspan="8" class="text-center">
+                                                            <div style="padding:12px 0">尚无信息</div>
+                                                        </td> 
+                                                    </tr>
+                                                <!--{/if}-->
+                                                </tbody>
+                                            </table>
+                                             <!--{if $multipage}--> <div class="flipPage" style="text-align:center;">$multipage</div> <!--{/if}-->
+                                        </div>
+                        
+                                    </div>
+                                </div>
+               
+                    </div>
+                </div>
+            </div>
+            <!-- 页头 END -->
+        </div>
+    </div>
+    
+
+
+<script>
+    $(document).ready(function() {
+    $('.js-example-basic-single').select2();
+});
+        var urlparam = {$urlparamjson};
+    
+        $('.js-example-basic-single').change( function () {
+            var varname = $(this).attr("data-var");
+            urlparam[varname] = $(this).val();
+            
+            var gotourl = '';
+    
+            $.each(urlparam,function(item,value){
+                if (value != '{#null#}') {
+                    gotourl +=  '&' +item  + "=" + value +'&mid'+'='+{$mid};
+                }            
+            })
+    
+            location.href = MODURL +'?'+ gotourl;
+            
+        });
+    
+    </script>
+<!--{subtemplate cms/common/footer}-->

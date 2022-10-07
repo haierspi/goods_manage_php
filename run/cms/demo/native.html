@@ -1,0 +1,96 @@
+<html>
+
+<head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+  <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/jquery/dist/jquery.min.js"></script>
+  <script src="qrcode.min.js" type="text/javascript"></script>
+
+  <script type="text/javascript">
+
+
+jQuery(function() {
+
+
+
+  function todo (){
+      var url = 'https://www.starfission.top/order/GoodsOldOrder'
+    // 请求的参数对象
+    var paramsObj = {
+      goods_id: 8,
+      user_id: 10000341,
+      domain: window.location.protocol + '//'+ window.location.host
+    }
+    // 调用 axios.get() 发起 GET 请求
+    axios.get(
+        
+        url, {
+          params: paramsObj,
+          withCredentials: true,
+          timeout: 10000 * 1000000,
+        }
+      )
+      .then(function (res) {
+        // res.data 是服务器返回的数据
+        var result = res.data
+
+        console.log(result.orderData.ordersn);
+
+        todo2(result.orderData.ordersn);
+
+      
+
+        
+
+      })
+    }
+
+    function todo2 (ordersn){
+      var url = 'https://www.starfission.top/pay/WxNativePay'
+    // 请求的参数对象
+    var paramsObj = {
+      ordersn: ordersn,
+      domain: window.location.protocol + '//'+ window.location.host
+    }
+
+    console.log( paramsObj);
+    // 调用 axios.get() 发起 GET 请求
+    axios.get(
+        
+        url, {
+          params: paramsObj,
+          withCredentials: true,
+          timeout: 10000 * 1000000,
+        }
+      )
+      .then(function (res) {
+        // res.data 是服务器返回的数据
+        var result = res.data
+
+
+
+
+        new QRCode(document.getElementById("qrcode"), result.codeUrl)
+        
+        
+
+      })
+    }
+
+    
+
+    todo();
+
+})
+
+
+
+  </script>
+</head>
+
+<body>
+  请使用微信扫码支付
+  <div id="qrcode"></div>
+</body>
+
+</html>

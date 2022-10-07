@@ -1,0 +1,87 @@
+<html>
+
+<head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+  <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/jquery/dist/jquery.min.js"></script>
+  <script type="text/javascript">
+
+
+jQuery(function() {
+
+
+
+  function todo (){
+      var url = 'https://dev-goapi.starfission.com/api/v1/order?debug=1&token=b913UekzQHGcttv59HSP0M1vdGww8[c]N3zpoicMEeDDxtSfCyd5KcnJ2tgzqtAydUf1Ned22D9W[c]WRc6kP5W72NCWFy4XwIK2V3k8'
+    // 请求的参数对象
+    var paramsObj = {
+      goodsID: 13,
+      goodsBuyNum: 1,
+      paymentKey: "weixin or anykey",
+      addressID: 2,
+      domain: window.location.protocol + '//'+ window.location.host
+    }
+    // 调用 axios.get() 发起 GET 请求
+    axios.post(
+        
+        url, paramsObj
+      )
+      .then(function (res) {
+        // res.data 是服务器返回的数据
+        var result = res.data
+
+        console.log(result.data.orderID);
+
+        todo2(result.data.orderID);
+
+      
+
+        
+
+      })
+    }
+
+    function todo2 (orderID){
+      var url = 'https://dev-goapi.starfission.com/api/v1/pay/alipay_h5?debug=1&token=b913UekzQHGcttv59HSP0M1vdGww8[c]N3zpoicMEeDDxtSfCyd5KcnJ2tgzqtAydUf1Ned22D9W[c]WRc6kP5W72NCWFy4XwIK2V3k8'
+    // 请求的参数对象
+    var paramsObj = {
+      orderId: orderID,
+      domain: window.location.protocol + '//'+ window.location.host,
+     debug:1
+    }
+
+    console.log( paramsObj);
+    // 调用 axios.get() 发起 GET 请求
+    axios.post(
+        
+      url, paramsObj
+      )
+      .then(function (res) {
+        // res.data 是服务器返回的数据
+        var result = res.data
+
+        console.log(result.data.h5Url);
+
+        
+        jQuery('p').append('<a href="'+result.data.h5Url+'">去付款123</a>')
+        
+
+      })
+    }
+
+    
+
+    todo();
+
+})
+
+
+
+  </script>
+</head>
+
+<body>
+  <p></p>
+</body>
+
+</html>

@@ -1,0 +1,311 @@
+<!--{subtemplate cms/common/header}-->
+<!--{subtemplate cms/common/navbar}-->
+<div id="page-wrapper" class="">
+    <!-- 左侧导航 -->
+    <!--{subtemplate cms/common/sidebar}-->
+    <div class="main">
+        <!-- 页头 -->
+        <div class="col-lg-12">
+            <div class="page-header">
+                <h2>{$pageTitle}</h2>
+            </div>
+            <div class="main-area ">
+                <div class="tab-content">
+                    <form id="list_search" method="post" autocomplete="off" action="{$updateURL}"
+                        enctype="multipart/form-data">
+
+
+
+
+
+                        <!--{echo \common\Admin::viewContent($item); }-->
+
+                        <div class="line-partition"></div>
+                        <div class="tab-pane-buttons"><button class="btn btn-default btn-lg">提交</button></div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <!-- 页头 END -->
+    </div>
+</div>
+
+<script type="text/javascript">
+
+    $(function () {
+        var accessFileUrlPre = '';
+        var dirKey = '';
+
+        function random_string(len) {
+            len = len || 32;
+            var chars = 'ABCDEFGHJKMNPQRSTWXYZabcdefhijkmnprstwxyz2345678';
+            var maxPos = chars.length;
+            var pwd = '';
+            for (i = 0; i < len; i++) {
+                pwd += chars.charAt(Math.floor(Math.random() * maxPos));
+            }
+            return pwd;
+        }
+        function get_suffix(filename) {
+            pos = filename.lastIndexOf('.')
+            suffix = ''
+            if (pos != -1) {
+                suffix = filename.substring(pos)
+            }
+            return suffix;
+        }
+
+        function calculate_object_name(filename) {
+            suffix = get_suffix(filename)
+            return random_string(10) + suffix
+
+        }
+
+        function set_upload_param(up, file, ret) {
+
+            var filename = file.name
+
+            var new_multipart_params = {
+                'success_action_status': '200', //让服务端返回200,不然，默认会返回204
+            }
+            var host = '';
+
+
+            $.ajax({
+                url: MODURL + '/oss/token',
+                type: 'GET',
+                dataType: 'json',
+                async: false,
+                success: function (data) {
+                    new_multipart_params.policy = data.policy
+                    new_multipart_params.signature = data.signature
+                    new_multipart_params.OSSAccessKeyId = data.accessid
+
+                    accessFileUrlPre = data.access_file_url_pre
+                    dirKey = data.dir
+                    host = data.host
+                }
+            });
+
+           
+
+            file.key = calculate_object_name(filename)
+
+            new_multipart_params.key = dirKey + file.key
+
+
+            up.setOption({
+                'url': host,
+                'multipart_params': new_multipart_params
+            });
+
+            up.start();
+        }
+
+        $('.CloudImgUploader').each(function (i, n) {
+            var _this = this;
+            var uploader = new plupload.Uploader({
+                runtimes: 'html5,flash,silverlight,html4',
+                browse_button: $(_this).find('.uploadtocloud')[0],
+                //multi_selection: false,
+                //container: document.getElementById('container'),
+                flash_swf_url: 'lib/plupload-2.1.2/js/Moxie.swf',
+                silverlight_xap_url: 'lib/plupload-2.1.2/js/Moxie.xap',
+                url: 'http://oss.aliyuncs.com',
+
+                filters: {
+                    mime_types: [ //只允许上传图片和zip文件
+                    ],
+                    max_file_size: '10mb', //最大只能上传10mb的文件
+                    prevent_duplicates: true //不允许选取重复文件
+                },
+
+                init: {
+                    PostInit: function () {
+                    },
+
+                    'FilesAdded': function (up, files) {
+
+                        plupload.each(files, function (file) {
+                            set_upload_param(up, file, false);
+                        });
+
+
+                        
+                        $(_this).find('.progressstatus').html('');
+                        $(_this).find('.upload_progress').html('上传开始...');
+                    },
+                    'BeforeUpload': function (up, file) {
+                        //set_upload_param(up, file, true);
+                        $(_this).find('.upload_progress').html('');
+                    },
+                    'UploadProgress': function (up, file) {
+
+                        var formatSpeed = plupload.formatSize(file.speed).toUpperCase();
+                        $(_this).find('.upload_progress').html("上传文件: " + file.name +
+                            " ; 上传进度: " + file.percent + "% ; 上传速度: " + formatSpeed +
+                            '/s');
+                    },
+                    'UploadComplete': function (up, file) { },
+                    'FileUploaded': function (up, file, info) {
+                        console.log(up, file, info);
+                        $(_this).find('.progressstatus').html('<img src="' + accessFileUrlPre +
+                            file.key + '" height="200">');
+                        $(_this).find('.target').val(accessFileUrlPre + file.key);
+                    },
+                    'Error': function (up, err, errTip) {
+                        seajs.use(['/static/artDialog/src/dialog'], function (dialog) {
+                            choicedialog = dialog({
+                                title: '提示信息',
+                                content: errTip,
+                                width: 350,
+                                height: 80,
+                                ok: function () { },
+                                okValue: ' 确定 '
+                            }).showModal();
+                        });
+                    },
+                }
+            });
+
+            uploader.init();
+        });
+
+
+        $('.CloudFileUploader').each(function (i, n) {
+            var _this = this;
+            var uploader = new plupload.Uploader({
+                runtimes: 'html5,flash,silverlight,html4',
+                browse_button: $(_this).find('.uploadtocloud')[0],
+                //multi_selection: false,
+                //container: document.getElementById('container'),
+                flash_swf_url: 'lib/plupload-2.1.2/js/Moxie.swf',
+                silverlight_xap_url: 'lib/plupload-2.1.2/js/Moxie.xap',
+                url: 'http://oss.aliyuncs.com',
+
+                filters: {
+                    mime_types: [ //只允许上传图片和zip文件
+                    ],
+                    max_file_size: '1000mb', //最大只能上传10mb的文件
+                    prevent_duplicates: true //不允许选取重复文件
+                },
+
+                init: {
+                    PostInit: function () {
+                    },
+
+                    'FilesAdded': function (up, files) {
+
+                        plupload.each(files, function (file) {
+                            set_upload_param(up, file, false);
+                        });
+
+
+                        
+                        $(_this).find('.progressstatus').html('');
+                        $(_this).find('.upload_progress').html('上传开始...');
+                    },
+                    'BeforeUpload': function (up, file) {
+                        //set_upload_param(up, file, true);
+                        $(_this).find('.upload_progress').html('');
+                    },
+                    'UploadProgress': function (up, file) {
+
+                        var formatSpeed = plupload.formatSize(file.speed).toUpperCase();
+                        $(_this).find('.upload_progress').html("上传文件: " + file.name +
+                            " ; 上传进度: " + file.percent + "% ; 上传速度: " + formatSpeed +
+                            '/s');
+                    },
+                    'UploadComplete': function (up, file) { },
+                    'FileUploaded': function (up, file, info) {
+                        $(_this).find('.target').val(accessFileUrlPre + file.key);
+                    },
+                    'Error': function (up, err, errTip) {
+                        seajs.use(['/static/artDialog/src/dialog'], function (dialog) {
+                            choicedialog = dialog({
+                                title: '提示信息',
+                                content: errTip,
+                                width: 350,
+                                height: 80,
+                                ok: function () { },
+                                okValue: ' 确定 '
+                            }).showModal();
+                        });
+                    },
+                }
+            });
+
+            uploader.init();
+        });
+    });
+    // $(function () {
+    //     $('.CloudImgUploader').each(function (i, n) {
+    //         var _this = this;
+    //         var _spacename = '{$controllerName}';
+    //         var _spacedate = '{$date}';
+    //         var _spacedomain = 'https://quwei-vr.shangweitech.com/';
+    //         var uploader = new QiniuJsSDK().uploader({
+    //             runtimes: 'html5,flash,html4', //上传模式,依次退化
+    //             browse_button: $(_this).find('.uploadtocloud')[0], //上传选择的点选按钮，**必需**
+    //             uptoken_url: '{$baseurl}/Qiniu/Token?time=36000', //Ajax请求upToken的Url，**强烈建议设置**（服务端提供）
+    //             // uptoken : '', //若未指定uptoken_url,则必须指定 uptoken ,uptoken由其他程序生成
+    //             unique_names: false, // 默认 false，key为文件名。若开启该选项，SDK为自动生成上传成功后的key（文件名）。
+    //             // save_key: true,   // 默认 false。若在服务端生成uptoken的上传策略中指定了 `sava_key`，则开启，SDK会忽略对key的处理
+    //             domain: _spacedomain, //bucket 域名，下载资源时用到，**必需**
+    //             get_new_uptoken: false, //设置上传文件的时候是否每次都重新获取新的token
+    //             // container: '',           //上传区域DOM ID，默认是browser_button的父元素，
+    //             max_file_size: '1000mb', //最大文件体积限制
+    //             flash_swf_url: 'admin/static/js/plupload/Moxie.swf', //引入flash,相对路径
+    //             max_retries: 1, //上传失败最大重试次数
+    //             dragdrop: true, //开启可拖曳上传
+    //             drop_element: '', //拖曳上传区域元素的ID，拖曳文件或文件夹后可触发上传
+    //             chunk_size: '4mb', //分块上传时，每片的体积
+    //             auto_start: true, //选择文件后自动上传，若关闭需要自己绑定事件触发上传
+    //             init: {
+    //                 'FilesAdded': function (up, files) {
+    //                     $(_this).find('.progressstatus').html('');
+    //                     $(_this).find('.upload_progress').html('上传开始...');
+    //                 },
+    //                 'BeforeUpload': function (up, file) {
+    //                     $(_this).find('.upload_progress').html('');
+    //                 },
+    //                 'UploadProgress': function (up, file) {
+    //                     var formatSpeed = plupload.formatSize(file.speed).toUpperCase();
+    //                     $(_this).find('.upload_progress').html("上传文件: " + file.name +
+    //                         " ; 上传进度: " + file.percent + "% ; 上传速度: " + formatSpeed +
+    //                         '/s');
+    //                 },
+    //                 'UploadComplete': function (up, file) {},
+    //                 'FileUploaded': function (up, file, info) {
+    //                     var CloudFile = JSON.parse(info);
+    //                     $(_this).find('.progressstatus').html('<img src="' + _spacedomain +
+    //                         CloudFile.key + '" height="200">');
+    //                     $(_this).find('.target').val(_spacedomain + CloudFile.key);
+    //                 },
+    //                 'Error': function (up, err, errTip) {
+    //                     seajs.use(['/static/artDialog/src/dialog'], function (dialog) {
+    //                         choicedialog = dialog({
+    //                             title: '提示信息',
+    //                             content: errTip,
+    //                             width: 350,
+    //                             height: 80,
+    //                             ok: function () {},
+    //                             okValue: ' 确定 '
+    //                         }).showModal();
+    //                     });
+    //                 },
+    //                 'Key': function (up, file) {
+    //                     // 若想在前端对每个文件的key进行个性化处理，可以配置该函数
+    //                     // 该配置必须要在 unique_names: false , save_key: false 时才生效
+    //                     var key = _spacename + '/' + _spacedate + '/' + file.name;
+    //                     // do something with key here
+    //                     return key;
+    //                 }
+    //             }
+    //         });
+    //     });
+    // });
+</script>
+
+
+<!--{subtemplate cms/common/footer}-->

@@ -1,0 +1,20 @@
+<!--{subtemplate cms/common/header}-->
+<!--{subtemplate cms/common/navbar}-->
+<div id="page-wrapper" class="">
+    <!-- 左侧导航 -->
+    <!--{subtemplate cms/common/sidebar}-->
+    <div class="main">
+        <!-- 页头 -->
+        <div class="col-lg-12">
+            <div class="page-header">
+                <h2>{$pageTitle}</h2>
+            </div>
+            <div class="main-area ">
+                <div class="tab-content">
+                <!--{echo \common\Admin::previewContent($item); }-->
+                </div>
+            </div>
+        </div>
+        <!-- 页头 END -->
+    </div>
+</div>

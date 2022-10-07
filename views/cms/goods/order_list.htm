@@ -1,0 +1,88 @@
+<!--{subtemplate cms/common/header}-->
+
+<!--{subtemplate cms/common/navbar}-->
+<div id="page-wrapper" class="">
+       
+    <!-- 左侧导航 -->
+    <!--{subtemplate cms/common/sidebar}-->
+    <div class="main">
+        <!-- 页头 -->
+        <div class="col-lg-12">
+            <div class="page-header noborder">
+                <h2>{$pageTitle}</h2>
+            </div>
+            
+            <div class="main-area">
+                <div class="main-area-operArea ">
+
+                    <form id="list_search" method="get" autocomplete="off" action="{$listSearchURL}" enctype="multipart/form-data" style="float: right;">
+                        <select class="js-example-basic-single" data-placeholder=""  data-var="type" name="status" id="">
+                            <option value=""  {if !isset($requestVars['status']) || $requestVars['status'] === ''}selected="selected"{/if}>全部状态</option>
+                             <!--{loop $listFields['status']['enum'] $ok $ov}-->
+                            <option value="$ok"  {if $requestVars['status'] === strval($ok)}selected="selected"{/if}>$ov</option>
+                             <!--{/loop}-->
+                        </select>
+                        <input type="text" name="ordersn" maxlength="400" value="{$requestVars['ordersn']}" placeholder="订单号" >
+                        <button class="btn btn-primary btn-sm" id="btn" style="margin-bottom: 3px;" >搜索</button>
+                    </form>
+                   
+                </div>
+
+                <div class="main-area-cvmList">
+                    <table class="table">
+                        <thead>
+                            <tr>
+
+                                    <!--{echo \common\Admin::listHeader($values); }-->
+
+                                <th width="5%">操作</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                      
+                            <style>
+                                .bigimg{width:600px;position: fixed;left: 0;top: 0; right: 0;bottom: 0;margin:auto;display: none;z-index:9999;border: 10px solid #fff;}
+                                .mask{position: fixed;left: 0;top: 0; right: 0;bottom: 0;background-color: #000;opacity:0.5;filter: Alpha(opacity=50);z-index: 98;transition:all 1s;display: none}
+                                .mask:hover{cursor:zoom-out}
+                                .mask>img{position: fixed;right:10px;top: 10px;width: 60px;}
+                                .mask>img:hover{cursor:pointer}
+                            </style>
+                            <script>
+                                
+                                $(function(){
+                                    /*
+                                     smallimg   // 小图
+                                     bigimg  //点击放大的图片
+                                     mask   //黑色遮罩
+                                     */
+                                    var obj = new zoom('mask', 'bigimg','smallimg');
+                                    obj.init();
+                                })
+                            </script>
+                        <!--{if $list['data']}-->
+                            <!--{loop $list['data'] $i $values}-->
+                            <tr>
+                                <!--{echo \common\Admin::listContent($listFields,$values); }-->
+                                <td  class="last">
+                                    <!-- <a class="btn btn-primary btn-sm" href="/{$controllerName}/GoodsUpdate?id={$values[goodsid]}">编辑</a> -->
+                                </td>
+                            </tr>
+                            <!--{/loop}-->
+                        <!--{else}-->
+                            <tr>
+                                <td colspan="{echo count($listFields)+1}" class="text-center">
+                                    <div style="padding:12px 0">尚无信息</div>
+                                </td> 
+                            </tr>
+                        <!--{/if}-->
+                      
+                        </tbody>
+                    </table>
+                    <!--{subtemplate cms/common/pagination}-->
+            </div>
+        </div>
+        <!-- 页头 END -->
+    </div>
+</div>
+
+<!--{subtemplate cms/common/footer}-->

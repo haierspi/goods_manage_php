@@ -1,0 +1,92 @@
+<html>
+
+<head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+  <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/jquery/dist/jquery.min.js"></script>
+  <script type="text/javascript">
+
+
+jQuery(function() {
+
+
+
+  function todo (){
+      var url = 'https://www.starfission.top/order/GoodsOldOrder'
+    // 请求的参数对象
+    var paramsObj = {
+      goods_id: 13,
+      user_id: 10000341,
+      domain: window.location.protocol + '//'+ window.location.host
+    }
+    // 调用 axios.get() 发起 GET 请求
+    axios.get(
+        
+        url, {
+          params: paramsObj,
+          withCredentials: true,
+          timeout: 10000 * 1000000,
+        }
+      )
+      .then(function (res) {
+        // res.data 是服务器返回的数据
+        var result = res.data
+
+        console.log(result.orderData.ordersn);
+
+        todo2(result.orderData.ordersn);
+
+      
+
+        
+
+      })
+    }
+
+    function todo2 (ordersn){
+      var url = 'https://www.starfission.top/pay/WxPay'
+    // 请求的参数对象
+    var paramsObj = {
+      ordersn: ordersn,
+      domain: window.location.protocol + '//'+ window.location.host
+    }
+
+    console.log( paramsObj);
+    // 调用 axios.get() 发起 GET 请求
+    axios.get(
+        
+        url, {
+          params: paramsObj,
+          withCredentials: true,
+          timeout: 10000 * 1000000,
+        }
+      )
+      .then(function (res) {
+        // res.data 是服务器返回的数据
+        var result = res.data
+
+        console.log(result.h5Url);
+
+        
+        jQuery('p').append('<a href="'+result.h5Url+'">去付款123</a>')
+        
+
+      })
+    }
+
+    
+
+    todo();
+
+})
+
+
+
+  </script>
+</head>
+
+<body>
+  <p></p>
+</body>
+
+</html>

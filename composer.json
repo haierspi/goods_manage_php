@@ -1,0 +1,9 @@
+{
+    "require": {
+        "xiangyu2038/withxy": "^6.0",
+        "laravel/framework": "^7.9",
+        "aliyuncs/oss-sdk-php": "^2.5"
+    },
+    "repositories": {
+    }
+}

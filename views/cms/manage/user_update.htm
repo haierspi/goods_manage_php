@@ -1,0 +1,96 @@
+<!--{subtemplate cms/common/header}-->
+<!--{subtemplate common/navbar}-->
+<div id="page-wrapper" class="">
+    <!-- 左侧导航 -->
+    <!--{subtemplate cms/common/sidebar}-->
+    <div class="main">
+
+        <!-- 页头 -->
+        <div class="col-lg-12">
+            <div class="page-header">
+                <h2>编辑用户</h2>
+            </div>
+            <div class="main-area ">
+                <div class="tab-content">
+                    <form id="list_search" method="post" autocomplete="off" action="manage/user?operation=update"
+                        enctype="multipart/form-data">
+
+                        <input type="hidden" name="uid" id="uid" value="$uid" />
+
+                        <ul class="tab-pane-media">
+                            <li class="item-title">用户名</li>
+                            <li class="item-body">
+                                <input class="form-control" id="username" name="username" type="text" value="$userone[username]"
+                                    {if $uid}disabled{/if} autocomplete="new-password" >
+                            </li>
+                            <li> </li>
+                        </ul>
+
+                        <ul class="tab-pane-media">
+                            <li class="item-title">密码</li>
+                            <li class="item-body">
+                                <input class="form-control"  type="password" id="password" name="password" autocomplete="off" placeholder="请输入密码"  onfocus="this.removeAttribute('readonly');" >
+
+
+                            </li>
+                            <li> </li>
+                        </ul>
+                        <script>
+                            //弹窗每次完成后执行,清空密码框的值
+                            $('#password').val('');
+                            $('#password').attr('readonly','true');
+                        </script>
+                            
+                        <ul class="tab-pane-media">
+                            <li class="item-title">用户权限</li>
+                            <li class="item-body">
+
+                                <div class="userprem checkbox">
+
+                                    <div>
+                                        <label class="userprem-checkbox"><input name="userprem[]" type="checkbox" {if
+                                                library::isperm('allperm','',$userperm)}checked{/if} value="<!--{echo library::permtext('allperm')}-->">全部权限</label>
+                                    </div>
+                                    <!--{eval $i=0;}-->
+                                    <!--{loop $SysCore->MODULE_LIST $key $value}-->
+                                    <!--{eval $i++;}-->
+                                    <!--{if $key != 'user'}-->
+                                    <div>
+                                        <label class="userprem-checkbox"><input name="userprem[]" type="checkbox" {if
+                                                library::isperm($value[key],'',$userperm)}checked{/if} value="<!--{echo library::permtext($value[key])}-->">$value[text]</label>
+                                        <p>
+                                            <!--{loop $value[child] $k $v}-->
+                                            <label class="radio-inline">
+                                                <input name="userprem[]" type="checkbox" {if
+                                                    library::isperm($value[key],$k,$userperm)}checked{/if} value="<!--{echo library::permtext($value[key],$k)}-->">$v[text]
+                                            </label>
+                                            <!--{/loop}-->
+                                        </p>
+                                    </div>
+
+                                    <!--{/if}-->
+                                    <!--{/loop}-->
+                                </div>
+
+                            </li>
+                            <li> </li>
+                        </ul>
+
+                        <div class="line-partition"></div>
+                        <div class="tab-pane-buttons"><button class="btn btn-default btn-lg">提交</button></div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <!-- 页头 END -->
+        <style type="text/css">
+            .userprem .checkbox-inline {
+                padding-top: 20px
+            }
+
+            .userprem p {
+                margin-left: 30px
+            }
+        </style>
+    </div>
+</div>

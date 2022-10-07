@@ -1,0 +1,17 @@
+
+{eval $listAry = \common\Admin::modelArray($list); }
+
+<div class="flipPage" style="text-align: center;" >
+	<em>&nbsp;{$listAry['total']}&nbsp;</em>
+	!--{if $listAry['last_page'] >1 }-->
+	<!--{if $listAry['current_page']>=$paginateShowlinkSize}--><a href="{$listAry['first_page_url']}" class="first">1 ...</a> <!--{/if}--> 
+	<!--{if $listAry['prev_page_url'] }--><a href="{$listAry['prev_page_url']}" class="prev">&lsaquo;&lsaquo;</a><!--{/if}--> 
+	
+	<!--{eval for($i= ($listAry['current_page']-$paginateShowlinkSize>0)?$listAry['current_page']-$paginateShowlinkSize:1; $i<=(($listAry['current_page']+$paginateShowlinkSize >$listAry['last_page'])?$listAry['last_page']:$listAry['current_page']+$paginateShowlinkSize); $i++){ }-->
+	<!--{if $i == $listAry['current_page']}--><strong>{$i}</strong> <!--{else}--> <a href="{$listAry['path']}page={$i}">{$i}</a><!--{/if}-->
+	<!--{eval } }-->
+	
+	<a href="{$listAry['next_page_url']}" class="next">&rsaquo;&rsaquo;</a>
+	<!--{if $listAry['current_page']+$paginateShowlinkSize<$listAry['last_page']}--><a href="{$listAry['last_page_url']}" class="next">... {$listAry['last_page']}</a><!--{/if}-->
+	<!--{/if}-->
+</div>

@@ -1,0 +1,17 @@
+
+<script>
+    $(function(){
+      $('.chosen').chosen({
+            no_results_text: "没有找到结果！",//搜索无结果时显示的提示  
+            search_contains:true,   //关键字模糊搜索。设置为true，只要选项包含搜索词就会显示；设置为false，则要求从选项开头开始匹配
+            allow_single_deselect:true, //单选下拉框是否允许取消选择。如果允许，选中选项会有一个x号可以删除选项
+            disable_search: false, //禁用搜索。设置为true，则无法搜索选项。
+            disable_search_threshold: 5, //当选项少等于于指定个数时禁用搜索。
+            placeholder_text_multiple:'请选择多个选项',
+       });
+    });
+</script>
+<!-- 封装 END -->
+
+</body>
+</html>

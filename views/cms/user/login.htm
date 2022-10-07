@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>$navtitle</title>
+    <base href="{$_G['siteurl']}" />
+    <meta name="keywords" content="{if !empty($metakeywords)}{echo dhtmlspecialchars($metakeywords)}{/if}" />
+    <meta name="description" content="{if !empty($metadescription)}{echo dhtmlspecialchars($metadescription)} {/if}{if empty($nobbname)},$_G['setting']['bbname']{/if}" />
+
+    <!-- ZUI 标准版压缩后的 CSS 文件 -->
+    <link rel="stylesheet" href="{$baseurl}/static/zui_1.8.1/css/zui.min.css">
+    <link rel="stylesheet" href="{$baseurl}/static/font-awesome-4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="{$baseurl}/static/css/login.css">
+
+    <!-- ZUI Javascript 依赖 jQuery -->
+    <script src="{$baseurl}/static/zui_1.8.1/lib/jquery/jquery.js"></script>
+    <!-- ZUI 标准版压缩后的 JavaScript 文件 -->
+    <script src="{$baseurl}/static/zui_1.8.1/js/zui.min.js"></script>
+</head>
+
+<body>
+
+    <div class="video-wrapper" style="width: 100%;height: 100vh;  z-index: -10;   position: absolute; overflow-y: hidden;">
+
+    </div>
+
+    <script>
+        jQuery(function () {
+            if (Math.round(Math.random()) == 1) {
+                $('.video-wrapper').html(
+                    '<video class="video-control" src="{$baseurl}/static/loginbg.mp4" muted="true" autoplay="autoplay" width="100%"   loop="loop"></video>'
+                );
+            } else {
+                $('.video-wrapper').css({
+                    "background": "url({$baseurl}/static/images/wall-" + Math.round(Math.random() * 9) +
+                        ".jpg) 50% 50% / cover"
+                });
+            }
+
+            $('.loginbox').css({
+                "margin-top": ($(window).height() - $('.loginbox').height()) /2
+            });
+        });
+    </script>
+
+    <div class="container-fixed-xs">
+
+        <div class="loginbox">
+            <div class="loginbox-logo">
+                <span>{APP_NAME}</span>
+            </div>
+            <div class="loginbox-box">
+                <h2 class="title ng-binding">您需要登陆</h2>
+                <hr class="box-header-line">
+                <form action="{$baseurl}/user/login" method="post" id="passportform" class="loginForm">
+                    <div class="form-group">
+                        <label>登录账号</label>
+                        <input type="text" id="username" name="username" class="form-control" placeholder="" tabindex="1">
+                    </div>
+                    <div class="form-group">
+                        <label>登录密码</label>
+                        <input type="password" id="password" name="password" autocomplete="off" tabindex="2" class="form-control"
+                            placeholder="" />
+                    </div>
+
+                    <div class="form-group form-group-submitbtn">
+                        <button class="btn btn-primary btn-block bluebtn" id="passportsubmitbtn" type="submit" tabindex="3">登
+                            录</button>
+                    </div>
+                </form>
+                <hr class="box-footer-line">
+                <div class="box-other">
+                    <span class="box-info">无法登陆?</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!--{subtemplate cms/common/footer}-->
