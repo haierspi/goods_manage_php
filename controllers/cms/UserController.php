@@ -74,8 +74,6 @@ class UserController extends Controller
             $listjson [$item->ItemID] = (array)$item;
         }
 
-        echo (   \json_encode($listjson,JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT));
-
         exit;
 
     }

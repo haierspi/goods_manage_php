@@ -6,12 +6,24 @@ use ff;
 use ff\auth\CookieAuthController;
 use ff\base\Controller;
 use ff\nosql\Redis;
-use models\tables\SupplierModel;
+use models\tables\AdminUserModel;
+use models\tables\ArticleCategoryModel;
+use models\tables\ArticleModel;
+use models\tables\BlockchainModel;
+use models\tables\BrandModel;
+use models\tables\ContractMetadataModel;
+use models\tables\ContractTemplateModel;
+use models\tables\CopyrightModel;
+use models\tables\GoodsCategoryModel;
+use models\tables\GoodsModel;
+use models\tables\MemberModel;
+use models\tables\OrderModel;
+use models\tables\ReleaseModel;
 use XiangYu2038\WithXy\condition\AndCondition;
 use XiangYu2038\WithXy\condition\Condition;
 use XiangYu2038\WithXy\condition\LikeCondition;
 
-class GoodsController extends CookieAuthController
+class AdminUserController extends CookieAuthController
 {
     private $pageNum = 20;
 
@@ -69,28 +81,18 @@ class GoodsController extends CookieAuthController
 
         $this->autoFields = [
 
-            'goods_id' => ['name' => '商品编码', 'search' => 1, 'type' => 'text', 'viewType' => 'hidden', 'updateTypeId' => 'id'],
-            'goods_name' => ['name' => '商品名称', 'search' => 1, 'type' => 'text'],
-            'goods_price' => ['name' => '商品价格', 'type' => 'text'],
-            'goods_in_price' => ['name' => '进货价格', 'type' => 'text'],
-            'goods_image' => ['name' => '商品封面图', 'type' => 'image', 'property' => 'width="50"',
-            'listClosure' => function ($model, $key) {
-                $model->$key = $model->$key . '?x-oss-process=image/resize,m_lfit,w_100/quality,q_80';
-            },
-        ],
-            'goods_body' => ['name' => '商品简介', 'type' => 'text', 'viewType' => 'html', 'listSkip' => 1],
-            'status' => ['name' => '商品状态', 'type' => 'enum', 'enum' => ['0' => '已下架', '1' => '上架中'], 'viewType' => 'radio', 'search' => 1],
-
-
-            'supplier_id' => ['name' => '供贸商', 'type' => 'enum', 'listSkip' => 1, 'enumDataGet' => ['set' => 'supplier', 'sets' => 'suppliers', 'title' => 'supplier_name'],
-                'viewType' => 'select',
-                'handleClosure' => function ($model, $id) {
-                    $release = SupplierModel::find($id);
-                    $model->supplier_name = $release->supplier_name;
+            'auid' => ['name' => 'ID', 'type' => 'text', 'viewType' => 'hidden', 'updateTypeId' => 'id'],
+            'username' => ['name' => '登录用户名', 'search' => 1,'type' => 'text'],
+            'password' => ['name' => '登录用户密码', 'type' => 'text', 'listSkip' => 1, 'handleCheck' => 1,
+                'viewClosure' => function ($model) {
+                    $model->password = "";
                 },
+            
+                'handleClosure' => function ($model, $id) {
+                    $model->password =  $model->getCalcPw($model->password);
+                
+                }
             ],
-
-            'supplier_name' => ['name' => '供贸商名字', 'type' => 'text',   'viewSkip' => 1],
         ];
 
     }
@@ -100,8 +102,8 @@ class GoodsController extends CookieAuthController
 
         $this->initAutoFields();
 
-        $modelClass = '\models\tables\GoodsModel';
-        $itemName = '商品管理';
+        $modelClass = '\models\tables\AdminUserModel';
+        $itemName = '用户登录管理';
 
         $page = empty($this->request->vars['page']) ? 1 : (int) $this->request->vars['page']; //页码
         $pageNum = empty($this->request->vars['page_num']) ? $this->pageNum : $this->request->vars['page_num']; //每页数据量
@@ -120,7 +122,7 @@ class GoodsController extends CookieAuthController
         //新增按钮
         Admin::listAddButtons(
             [
-                "增加供贸商" => [
+                "添加登录用户" => [
                     'url' => '/' . $this->controllerPath . '/update',
                     'class' => 'btn-danger',
                 ],
@@ -157,8 +159,8 @@ class GoodsController extends CookieAuthController
 
         $this->initAutoFields();
 
-        $modelClass = '\models\tables\GoodsModel';
-        $itemName = '商品';
+        $modelClass = '\models\tables\AdminUserModel';
+        $itemName = '用户登录';
 
         $id = (int) $this->request->vars['id'];
         $update = empty($this->request->vars['update']) ? [] : $this->request->vars['update'];

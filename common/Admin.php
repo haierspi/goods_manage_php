@@ -387,7 +387,7 @@ class Admin
                             <li class="item-descr-title">' . $field['name'] . '</li>
                             <li class="item-descr-msg">
                                 <textarea  '.$disabled.'  name="' . $name . '" id="' . $htmlId . '"
-                                    style="width:1000px;height:500px">' . htmlspecialchars($item->$key) . '</textarea>
+                                    style="width:450px;height:100px">' . htmlspecialchars($item->$key) . '</textarea>
 
                                 <script type="text/javascript">
                                     var ' . $htmlId . ' = UE.getEditor("' . $htmlId . '");
@@ -702,52 +702,22 @@ class Admin
         $adminUserAutModel = new AdminUserAuthModel();
 
         $menus = [];
-        $menus['Member'] = [
-            'name' => '会员',
-            'subMenus' => [
-                'List' => '会员列表',
-            ],
-        ];
 
-        $menus['News'] = [
-            'name' => '公告&横幅',
-            'subMenus' => [
-                'NoticeList' => '公告',
-                'BannerList' => '横幅',
-            ],
-        ];
 
         $menus['Goods'] = [
             'name' => '商品管理',
             'subMenus' => [
                 'list' => '商品列表',
-                'GoodsCategoryList' => '商品分类',
-
-                'TopicList' => '专题列表',
             ],
         ];
 
-        $menus['App'] = [
-            'name' => '商户&渠道',
+        $menus['Supplier'] = [
+            'name' => '供贸商管理',
             'subMenus' => [
-                'list' => '商户应用列表',
-                'HannelsList' => '渠道列表',
+                'list' => '供贸商管理',
             ],
         ];
 
-        $menus['GoodsSet'] = [
-            'name' => '商品关联管理',
-            'subMenus' => [
-
-                'BlockchainList' => '区块链类型',
-                'ContractTypeList' => '合约协议类型',
-                'ContractTemplateList' => '合约模板',
-                'ContractMetadataList' => '合约MetaData',
-                'CopyrightList' => '版权方',
-                'ReleaseList' => '发行方',
-                'BrandList' => '品牌方',
-            ],
-        ];
 
         $menus['Order'] = [
             'name' => '订单管理',
@@ -756,10 +726,10 @@ class Admin
             ],
         ];
 
-        $menus['Client'] = [
-            'name' => '客户端',
+        $menus['AdminUser'] = [
+            'name' => '用户登录管理',
             'subMenus' => [
-                'VersionList' => '版本列表',
+                'list' => '用户登录管理',
             ],
         ];
 

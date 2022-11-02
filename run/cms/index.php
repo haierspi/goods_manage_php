@@ -3,7 +3,7 @@
 //项目名称
 use ff\helpers\StringLib;
 chdir(__DIR__);
-define('APP_NAME', 'CMS 内容管理');
+define('APP_NAME', '商品销售管理系统');
 //强制前缀访问
 define('SYSTEM_CONTROLLERS_PRE', 'cms');
 define('SYSTEM_CONTROLLERS_DEFAULT', 'User');
